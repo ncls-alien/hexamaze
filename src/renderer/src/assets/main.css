@@ -7,6 +7,32 @@
 
   --color-background: var(--color-neutral-900);
   --color-text: var(--color-neutral-0);
+  --color-text-muted: var(--color-neutral-600);
+  --color-border: var(--color-neutral-600);
+
+  --animate-strobe: strobe 0.05s ease-in-out infinite;
+
+  @keyframes strobe {
+    0% {
+      fill-opacity: 1;
+    }
+    50% {
+      fill-opacity: 0;
+    }
+    100% {
+      fill-opacity: 1;
+    }
+  }
+}
+
+@utility writing-* {
+  writing-mode: --value(
+    'horizontal-tb',
+    'vertical-lr',
+    'vertical-rl',
+    'sideways-lr',
+    'sideways-rl'
+  );
 }
 
 *,
@@ -14,7 +40,6 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
 }
 
 ul {
@@ -42,4 +67,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+h2 {
+  @apply text-2xl font-bold;
 }
