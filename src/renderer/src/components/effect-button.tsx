@@ -2,7 +2,6 @@ import React from 'react'
 
 export interface EffectItem {
   id: string
-  label: string
   icon: React.ComponentType<{ className?: string }>
 }
 
@@ -25,9 +24,8 @@ export const EffectButton: React.FC<EffectButtonProps> = ({
     <button
       type="button"
       onTouchStart={onPress}
-      title={effect.label}
       className={`
-        relative inline-flex items-center justify-center p-0 bg-transparent border-none cursor-pointer focus:outline-none select-none
+        relative inline-flex items-center justify-center p-0 bg-transparent border-none focus:outline-none select-none
         transition-transform duration-200 active:scale-90
         ${isShifted ? 'translate-y-1/2' : 'translate-y-0'}
       `}

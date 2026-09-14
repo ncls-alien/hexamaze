@@ -8,8 +8,24 @@ export interface LampState {
 
 export interface EngineConfig {
   activeEffectId: string
-  effectSpeed: number
   effectColor: { r: number; g: number; b: number }
+  effectSpeed: number
   backgroundColor: { r: number; g: number; b: number }
   backgroundBrightness: number
+  isFlashActive: boolean
+  isBlackoutActive: boolean
+  isStrobeActive: boolean
+}
+
+export interface RGBColor {
+  r: number
+  g: number
+  b: number
+}
+
+export interface ColorPreset {
+  id: string
+  label: string
+  hex: string
+  rgb: RGBColor
 }

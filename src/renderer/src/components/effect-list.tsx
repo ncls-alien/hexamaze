@@ -10,14 +10,14 @@ import SwipeDown from './icons/swipe-down'
 import { useLightingStore } from '@renderer/stores/useLightingStore'
 
 const EFFECTS_CONFIG: EffectItem[] = [
-  { id: 'none', label: 'No Effect', icon: NoEffect },
-  { id: 'expand', label: 'Expand', icon: Expand },
-  { id: 'shrink', label: 'Shrink', icon: Shrink },
-  { id: 'rotate', label: 'Rotate', icon: Rotate },
-  { id: 'swipe-right', label: 'Swipe Right', icon: SwipeRight },
-  { id: 'swipe-left', label: 'Swipe Left', icon: SwipeLeft },
-  { id: 'swipe-up', label: 'Shrink', icon: SwipeUp },
-  { id: 'swipe-down', label: 'Rotate', icon: SwipeDown }
+  { id: 'none', icon: NoEffect },
+  { id: 'expand', icon: Expand },
+  { id: 'shrink', icon: Shrink },
+  { id: 'rotate', icon: Rotate },
+  { id: 'swipe-right', icon: SwipeRight },
+  { id: 'swipe-left', icon: SwipeLeft },
+  { id: 'swipe-up', icon: SwipeUp },
+  { id: 'swipe-down', icon: SwipeDown }
 ]
 
 function EffectList(): React.JSX.Element {

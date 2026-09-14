@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-import type { LampState } from '@type/lighting'
-import type { RGBColor } from '@renderer/constants/colors'
+import type { LampState, RGBColor } from '@type/lighting'
 
 interface LightingStore {
   activeEffectId: string
@@ -35,7 +34,7 @@ export const useLightingStore = create<LightingStore>((set) => ({
   effectColor: { r: 255, g: 255, b: 255 },
   effectSpeed: 1.5,
 
-  backgroundColor: { r: 0, g: 255, b: 0 },
+  backgroundColor: { r: 0, g: 0, b: 255 },
   backgroundBrightness: 50,
 
   isFlashActive: false,

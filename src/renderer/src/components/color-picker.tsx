@@ -1,5 +1,6 @@
-import { COLOR_PRESETS, type RGBColor } from '@renderer/constants/colors'
+import { COLOR_PRESETS } from '@renderer/constants/colors'
 import HexaButton from './hexa-button'
+import type { RGBColor } from '@type/lighting'
 
 interface ColorPickerProps {
   activeColor: RGBColor

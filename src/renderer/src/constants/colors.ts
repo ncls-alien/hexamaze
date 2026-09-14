@@ -1,15 +1,4 @@
-export interface RGBColor {
-  r: number
-  g: number
-  b: number
-}
-
-export interface ColorPreset {
-  id: string
-  label: string
-  hex: string
-  rgb: RGBColor
-}
+import { ColorPreset, RGBColor } from '@type/lighting'
 
 export function hexToRgb(hex: string): RGBColor {
   const cleanHex = hex.replace('#', '')
