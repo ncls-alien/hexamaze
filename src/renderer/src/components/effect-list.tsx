@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { EffectButton, EffectItem } from './effect-button'
 import NoEffect from './icons/no-effect'
 import Expand from './icons/expand'
@@ -8,6 +7,7 @@ import SwipeRight from './icons/swipe-right'
 import SwipeLeft from './icons/swipe-left'
 import SwipeUp from './icons/swipe-up'
 import SwipeDown from './icons/swipe-down'
+import { useLightingStore } from '@renderer/stores/useLightingStore'
 
 const EFFECTS_CONFIG: EffectItem[] = [
   { id: 'none', label: 'No Effect', icon: NoEffect },
@@ -20,19 +20,9 @@ const EFFECTS_CONFIG: EffectItem[] = [
   { id: 'swipe-down', label: 'Rotate', icon: SwipeDown }
 ]
 
-interface EffectSectionProps {
-  onEffectChange?: (effectId: string) => void
-}
-
-export const EffectSection: React.FC<EffectSectionProps> = ({ onEffectChange }) => {
-  const [activeEffectId, setActiveEffectId] = useState<string>('none')
-
-  const handleSelect = (id: string): void => {
-    setActiveEffectId(id)
-    if (onEffectChange) {
-      onEffectChange(id)
-    }
-  }
+function EffectList(): React.JSX.Element {
+  const activeEffectId = useLightingStore((state) => state.activeEffectId)
+  const setActiveEffectId = useLightingStore((state) => state.setActiveEffectId)
 
   return (
     <div className="flex flex-wrap items-center pb-8">
@@ -44,7 +34,7 @@ export const EffectSection: React.FC<EffectSectionProps> = ({ onEffectChange }) 
             <EffectButton
               effect={effect}
               isActive={activeEffectId === effect.id}
-              onPress={() => handleSelect(effect.id)}
+              onPress={() => setActiveEffectId(effect.id)}
               isShifted={isShifted}
             />
           </div>
@@ -54,4 +44,4 @@ export const EffectSection: React.FC<EffectSectionProps> = ({ onEffectChange }) 
   )
 }
 
-export default EffectSection
+export default EffectList

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLightingStore } from '@renderer/stores/useLightingStore'
 
 interface ActionButtonProps {
   label?: string
@@ -56,45 +56,32 @@ function ActionButton({
 }
 
 function ActionButtonSection(): React.JSX.Element {
-  const [activeActions, setActiveActions] = useState<Record<string, boolean>>({
-    FLASH: false,
-    STROBE: false,
-    BLACKOUT: false
-  })
-
-  function handleTouchStart(label: string): void {
-    setActiveActions((prev) => ({
-      ...prev,
-      [label]: true
-    }))
-  }
-
-  function handleTouchEnd(label: string): void {
-    setActiveActions((prev) => ({
-      ...prev,
-      [label]: false
-    }))
-  }
+  const isFlashActive = useLightingStore((state) => state.isFlashActive)
+  const setFlashActive = useLightingStore((state) => state.setFlashActive)
+  const isBlackoutActive = useLightingStore((state) => state.isBlackoutActive)
+  const setBlackoutActive = useLightingStore((state) => state.setBlackoutActive)
+  const isStrobeActive = useLightingStore((state) => state.isStrobeActive)
+  const setStrobeActive = useLightingStore((state) => state.setStrobeActive)
 
   return (
     <div className="flex *:-mx-3! *:odd:mt-36!">
       <ActionButton
         label="FLASH"
-        active={activeActions.FLASH}
-        onTouchStart={() => handleTouchStart('FLASH')}
-        onTouchEnd={() => handleTouchEnd('FLASH')}
+        active={isFlashActive}
+        onTouchStart={() => setFlashActive(true)}
+        onTouchEnd={() => setFlashActive(false)}
       />
       <ActionButton
         label="STROBE"
-        active={activeActions.STROBE}
-        onTouchStart={() => handleTouchStart('STROBE')}
-        onTouchEnd={() => handleTouchEnd('STROBE')}
+        active={isStrobeActive}
+        onTouchStart={() => setStrobeActive(true)}
+        onTouchEnd={() => setStrobeActive(false)}
       />
       <ActionButton
         label="BLACKOUT"
-        active={activeActions.BLACKOUT}
-        onTouchStart={() => handleTouchStart('BLACKOUT')}
-        onTouchEnd={() => handleTouchEnd('BLACKOUT')}
+        active={isBlackoutActive}
+        onTouchStart={() => setBlackoutActive(true)}
+        onTouchEnd={() => setBlackoutActive(false)}
       />
     </div>
   )

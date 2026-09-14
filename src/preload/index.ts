@@ -1,8 +1,22 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  updateEngineConfig: (config: Record<string, unknown>): void => {
+    ipcRenderer.send('update-engine-config', config)
+  },
+  onLampFrameUpdate: (callback: (frames: Record<string, unknown>) => void): (() => void) => {
+    const subscription = (_event: unknown, frames: Record<string, unknown>): void =>
+      callback(frames)
+    ipcRenderer.on('lamp-frame-update', subscription)
+
+    // Return Cleanup Function
+    return () => {
+      ipcRenderer.removeListener('lamp-frame-update', subscription)
+    }
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -1,9 +1,6 @@
 import { useMemo } from 'react'
 import Lamp from './lamp'
-
-interface HexGridProps {
-  lampStates?: Record<string, { r: number; g: number; b: number; dimmer: number; strobe: boolean }>
-}
+import { useLightingStore } from '@renderer/stores/useLightingStore'
 
 interface LampUnit {
   id: string
@@ -14,7 +11,9 @@ interface LampUnit {
   dist: number
 }
 
-function HexaGrid({ lampStates }: HexGridProps): React.JSX.Element {
+function HexaGrid(): React.JSX.Element {
+  const lampStates = useLightingStore((s) => s.lampStates)
+
   const HEX_WIDTH = 66
   const GAP = 5
   const GRID_RADIUS = 5
@@ -32,7 +31,7 @@ function HexaGrid({ lampStates }: HexGridProps): React.JSX.Element {
         const id = `${q},${r}`
         const dist = Math.max(Math.abs(q), Math.abs(r), Math.abs(-q - r))
 
-        const x = (3 / 4) * centerDistance * (q / (Math.sqrt(3) / 2))
+        const x = (Math.sqrt(3) / 2) * centerDistance * q
         const y = centerDistance * (r + q / 2)
 
         units.push({ id, q, r, x, y, dist })

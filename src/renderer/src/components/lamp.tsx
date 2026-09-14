@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 interface LampProps {
   x: number
@@ -8,11 +8,11 @@ interface LampProps {
   b: number
   dimmer: number
   strobe: boolean
-  onTouchStart: () => void
-  onTouchEnd: () => void
+  onTouchStart?: () => void
+  onTouchEnd?: () => void
 }
 
-function Lamp({
+function LampComponent({
   x,
   y,
   r,
@@ -44,5 +44,17 @@ function Lamp({
     </g>
   )
 }
+
+const Lamp = memo(LampComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.r === nextProps.r &&
+    prevProps.g === nextProps.g &&
+    prevProps.b === nextProps.b &&
+    prevProps.dimmer === nextProps.dimmer &&
+    prevProps.strobe === nextProps.strobe &&
+    prevProps.x === nextProps.x &&
+    prevProps.y === nextProps.y
+  )
+})
 
 export default Lamp

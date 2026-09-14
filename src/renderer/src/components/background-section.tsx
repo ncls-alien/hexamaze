@@ -1,35 +1,18 @@
-import { useState } from 'react'
+import { useLightingStore } from '@renderer/stores/useLightingStore'
 import ColorPicker from './color-picker'
 import Slider from './slider'
 
-const colors: Record<string, string> = {
-  white: '#ffffff',
-  red: '#ff0000',
-  amber: '#ff7f00',
-  yellow: '#ffff00',
-  green: '#00ff00',
-  cyan: '#00ffff',
-  blue: '#0000ff',
-  pink: '#ff00ff'
-}
-
 function BackgroundSection(): React.JSX.Element {
-  const [brightness, setBrightness] = useState(50)
-  const [color, setColor] = useState(colors.white)
-
-  function handleColorChange(color: string): void {
-    setColor(color)
-  }
+  const brightness = useLightingStore((state) => state.backgroundBrightness)
+  const setBrightness = useLightingStore((state) => state.setBackgroundBrightness)
+  const color = useLightingStore((state) => state.backgroundColor)
+  const setColor = useLightingStore((state) => state.setBackgroundColor)
 
   return (
     <div className="shrink-0 w-132 p-4 flex flex-col gap-20">
       <div className="flex flex-col gap-4">
         <h2>COLOR</h2>
-        <ColorPicker
-          colors={Object.values(colors)}
-          activeColor={color}
-          onChange={handleColorChange}
-        />
+        <ColorPicker activeColor={color} onChange={setColor} />
       </div>
       <div className="flex flex-col gap-4">
         <h2>BRIGHTNESS</h2>
