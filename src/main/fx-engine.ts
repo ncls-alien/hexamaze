@@ -137,7 +137,7 @@ export class FxEngine {
 
         const diff = (sweep - normalizedAngle + 1.0) % 1.0
 
-        const tailLength = 0.25
+        const tailLength = 0.5
         return diff < tailLength ? 1.0 - diff / tailLength : 0
       }
 
