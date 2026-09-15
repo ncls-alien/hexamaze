@@ -3,8 +3,8 @@ import Slider from './slider'
 import EffectList from './effect-list'
 import { useLightingStore } from '@renderer/stores/useLightingStore'
 
-const minSpeed = 0.1
-const maxSpeed = 3
+const minSpeed = 0.05
+const maxSpeed = 5
 
 function EffectSection(): React.JSX.Element {
   const effectSpeed = useLightingStore((state) => state.effectSpeed)
@@ -29,7 +29,7 @@ function EffectSection(): React.JSX.Element {
           onChange={setEffectSpeed}
           min={minSpeed}
           max={maxSpeed}
-          label={+effectSpeed.toFixed(1) + 's'}
+          label={Math.round((effectSpeed / 1) * 100) + '%'}
         />
       </div>
     </div>
