@@ -25,13 +25,10 @@ export class ArtNetSender {
 
       const startChannel = index * this.fixture.channelCount
 
-      // Abbruch, falls wir das DMX-Universum (512 Kanäle) überschreiten würden
       if (startChannel + this.fixture.channelCount > 512) return
 
-      // DMX-Werte vom Fixture rendern lassen
       const channels = this.fixture.renderDmx(lamp)
 
-      // Bytes in den Haupt-DMX-Buffer schreiben
       for (let i = 0; i < channels.length; i++) {
         dmxData[startChannel + i] = channels[i]
       }
@@ -50,17 +47,17 @@ export class ArtNetSender {
       0x4e,
       0x65,
       0x74,
-      0x00, // "Art-Net\0"
       0x00,
-      0x50, // OpOutput / ArtDmx
       0x00,
-      0x0e, // ProtVer 14
+      0x50,
       0x00,
-      0x00, // Sequence, Physical
-      this.universe & 0xff, // SubUni
-      (this.universe >> 8) & 0xff, // Net
-      (dmxData.length >> 8) & 0xff, // Length High
-      dmxData.length & 0xff // Length Low
+      0x0e,
+      0x00,
+      0x00,
+      this.universe & 0xff,
+      (this.universe >> 8) & 0xff,
+      (dmxData.length >> 8) & 0xff,
+      dmxData.length & 0xff
     ])
 
     return Buffer.concat([header, dmxData])
