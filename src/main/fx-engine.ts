@@ -147,7 +147,28 @@ export class FxEngine {
     }
   }
 
-  // Hilfsfunktionen
+  public renderTestFrame(gridOrder: string[]): Record<string, LampState> {
+    const frame: Record<string, LampState> = {}
+
+    const activeIndex = Math.floor(Date.now() / 150) % gridOrder.length
+
+    gridOrder.forEach((id, index) => {
+      if (index === activeIndex) {
+        if (index === 0) {
+          frame[id] = { r: 0, g: 255, b: 0, dimmer: 100, strobe: false }
+        } else if (index === gridOrder.length - 1) {
+          frame[id] = { r: 255, g: 0, b: 0, dimmer: 100, strobe: false }
+        } else {
+          frame[id] = { r: 255, g: 255, b: 255, dimmer: 100, strobe: false }
+        }
+      } else {
+        frame[id] = { r: 0, g: 0, b: 0, dimmer: 0, strobe: false }
+      }
+    })
+
+    return frame
+  }
+
   private lerpColor(c1: RGBColor, c2: RGBColor, factor: number): RGBColor {
     return {
       r: Math.round(c1.r + (c2.r - c1.r) * factor),

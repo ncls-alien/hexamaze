@@ -32,7 +32,7 @@ interface LightingStore {
 export const useLightingStore = create<LightingStore>((set) => ({
   activeEffectId: 'none',
   effectColor: { r: 255, g: 255, b: 255 },
-  effectSpeed: 1.5,
+  effectSpeed: 1,
 
   backgroundColor: { r: 0, g: 0, b: 255 },
   backgroundBrightness: 50,

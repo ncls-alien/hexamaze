@@ -3,6 +3,8 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { FxEngine } from './fx-engine'
+import { ArtNetSender } from './artnet'
+import { ColorDashParQuad7 } from './fixtures/ColorDashParQuad7'
 
 function createWindow(): void {
   // Create the browser window.
@@ -75,6 +77,17 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and require them here.
 
 const fxEngine = new FxEngine()
+const fixture = new ColorDashParQuad7()
+const artNet = new ArtNetSender(fixture, '192.168.2.40', 0)
+
+const GRID_ORDER: string[] = []
+for (let q = -4; q <= 4; q++) {
+  for (let r = -4; r <= 4; r++) {
+    if (Math.abs(q + r) <= 4) {
+      GRID_ORDER.push(`${q},${r}`)
+    }
+  }
+}
 
 export function startEngineLoop(mainWindow: BrowserWindow): void {
   ipcMain.on('update-engine-config', (_event, config) => {
@@ -83,6 +96,8 @@ export function startEngineLoop(mainWindow: BrowserWindow): void {
 
   setInterval(() => {
     const frame = fxEngine.renderFrame()
+
+    artNet.sendFrame(frame, GRID_ORDER)
 
     if (!mainWindow.isDestroyed()) {
       mainWindow.webContents.send('lamp-frame-update', frame)

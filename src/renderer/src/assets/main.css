@@ -10,7 +10,7 @@
   --color-text-muted: var(--color-neutral-600);
   --color-border: var(--color-neutral-600);
 
-  --animate-strobe: strobe 0.05s ease-in-out infinite;
+  --animate-strobe: strobe 0.1s ease-in-out infinite;
 
   @keyframes strobe {
     0% {
