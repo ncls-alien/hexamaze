@@ -78,35 +78,42 @@ interface SliderProps {
 function Slider({ value, onChange, label, min = 0, max = 100 }: SliderProps): React.JSX.Element {
   const [isActive, setIsActive] = useState(false)
   const sliderRef = useRef<HTMLDivElement>(null)
+  const touchStartXRef = useRef<number | null>(null)
+  const initialValueRef = useRef<number>(value)
 
   const range = max - min
   const normalizedValue = Math.max(min, Math.min(max, value))
   const percentage = range > 0 ? ((normalizedValue - min) / range) * 100 : 0
 
-  const updateValueFromTouch = (clientX: number): void => {
-    if (!sliderRef.current) return
-
-    const { left, width } = sliderRef.current.getBoundingClientRect()
-    if (width === 0) return
-
-    const rawPercentage = Math.max(0, Math.min(1, (clientX - left) / width))
-
-    const newValue = min + rawPercentage * range
-    onChange(newValue)
-  }
-
   const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>): void => {
+    const touch = event.targetTouches[0]
+    if (!touch) return
+
     setIsActive(true)
-    updateValueFromTouch(event.touches[0].clientX)
+    touchStartXRef.current = touch.clientX
+    initialValueRef.current = value
   }
 
   const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>): void => {
-    if (!isActive) return
-    updateValueFromTouch(event.touches[0].clientX)
+    if (!isActive || touchStartXRef.current === null || !sliderRef.current) return
+
+    const touch = event.targetTouches[0]
+    if (!touch) return
+
+    const currentX = touch.clientX
+    const trackWidth = sliderRef.current.offsetWidth
+    if (trackWidth === 0) return
+
+    const deltaX = currentX - touchStartXRef.current
+    const deltaValue = (deltaX / trackWidth) * range
+    const newValue = initialValueRef.current + deltaValue
+
+    onChange(Math.max(min, Math.min(max, newValue)))
   }
 
   const handleTouchEnd = (): void => {
     setIsActive(false)
+    touchStartXRef.current = null
   }
 
   return (
