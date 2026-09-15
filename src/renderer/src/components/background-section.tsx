@@ -9,7 +9,7 @@ function BackgroundSection(): React.JSX.Element {
   const setColor = useLightingStore((state) => state.setBackgroundColor)
 
   return (
-    <div className="shrink-0 w-132 p-4 flex flex-col gap-20">
+    <div className="shrink-0 w-132 p-4 flex flex-col gap-12">
       <div className="flex flex-col gap-4">
         <h2>COLOR</h2>
         <ColorPicker activeColor={color} onChange={setColor} />

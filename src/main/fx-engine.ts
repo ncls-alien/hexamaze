@@ -4,7 +4,8 @@ export class FxEngine {
   private config: EngineConfig = {
     activeEffectId: 'none',
     effectColor: { r: 255, g: 0, b: 255 },
-    effectSpeed: 1.5,
+    effectDirection: 'forward',
+    effectSpeed: 1,
     backgroundColor: { r: 15, g: 23, b: 42 },
     backgroundBrightness: 20,
     isFlashActive: false,
@@ -12,10 +13,9 @@ export class FxEngine {
     isStrobeActive: false
   }
 
-  // Für phasen-kontinuierliche Speed-Änderungen
   private lastFrameTime: number = Date.now()
   private phase: number = 0
-  private lastEffectId: string = 'none' // <-- NEU: Merkt sich den vorherigen Effekt
+  private lastEffectId: string = 'none'
 
   public updateConfig(newConfig: Partial<EngineConfig>): void {
     this.config = { ...this.config, ...newConfig }
@@ -28,19 +28,23 @@ export class FxEngine {
     const deltaTime = (now - this.lastFrameTime) / 1000
     this.lastFrameTime = now
 
-    // OVERRIDE: Blackout
     if (this.config.isBlackoutActive) {
       return this.generateEmptyFrame()
     }
 
-    // <-- NEU: Wenn der Effekt gewechselt wurde, Phase auf 0 zurücksetzen
     if (this.config.activeEffectId !== this.lastEffectId) {
       this.phase = 0
       this.lastEffectId = this.config.activeEffectId
     }
 
-    const speed = Math.max(0.1, this.config.effectSpeed)
-    this.phase += deltaTime * speed
+    let speed = Math.max(0.1, this.config.effectSpeed)
+
+    if (this.config.effectDirection === 'bounce') {
+      speed *= 0.5
+    }
+
+    this.phase = (this.phase + deltaTime * speed) % 1.0
+    const effectivePhase = this.getEffectivePhase(this.phase, this.config.effectDirection)
 
     const bgDimmerFactor = this.config.backgroundBrightness / 100
     const effectiveBgColor: RGBColor = {
@@ -49,7 +53,6 @@ export class FxEngine {
       b: Math.round(this.config.backgroundColor.b * bgDimmerFactor)
     }
 
-    // Durch alle 61 Waben iterieren (-4 bis 4)
     for (let q = -4; q <= 4; q++) {
       for (let r = -4; r <= 4; r++) {
         if (Math.abs(q + r) > 4) continue
@@ -69,7 +72,7 @@ export class FxEngine {
           continue
         }
 
-        const fxIntensity = this.calculateEffect(this.config.activeEffectId, q, r, this.phase)
+        const fxIntensity = this.calculateEffect(this.config.activeEffectId, q, r, effectivePhase)
 
         const finalColor = this.lerpColor(effectiveBgColor, this.config.effectColor, fxIntensity)
 
@@ -94,38 +97,26 @@ export class FxEngine {
     const distFromCenter = (Math.abs(q) + Math.abs(r) + Math.abs(-q - r)) / 2
 
     switch (effectId) {
-      case 'expand': {
-        const radius = (phase * 3) % 4.5
+      case 'pulse': {
+        const waveWidth = 1.5
+        const radius = phase * 5.5
         const diff = Math.abs(distFromCenter - radius)
-        return diff < 1.0 ? 1.0 - diff : 0
+        return diff < waveWidth ? (waveWidth - diff) / waveWidth : 0
       }
 
-      case 'shrink': {
-        const radius = 4.5 - ((phase * 3) % 4.5)
-        const diff = Math.abs(distFromCenter - radius)
-        return diff < 1.0 ? 1.0 - diff : 0
+      case 'swipe-horizontal': {
+        const waveWidth = 2.5
+        const position = -5.5 + phase * 11
+        const diff = Math.abs(q - position)
+        return diff < waveWidth ? (waveWidth - diff) / waveWidth : 0
       }
 
-      case 'swipe-right': {
-        const wave = Math.sin(phase * 4 - (q + 4) * 0.6 - Math.PI / 2)
-        return wave > 0.3 ? (wave - 0.3) / 0.7 : 0
-      }
-
-      case 'swipe-left': {
-        const wave = Math.sin(phase * 4 - (4 - q) * 0.6 - Math.PI / 2)
-        return wave > 0.3 ? (wave - 0.3) / 0.7 : 0
-      }
-
-      case 'swipe-down': {
-        const y = r + q * 0.5
-        const wave = Math.sin(phase * 4 - (y + 4) * 0.6 - Math.PI / 2)
-        return wave > 0.3 ? (wave - 0.3) / 0.7 : 0
-      }
-
-      case 'swipe-up': {
-        const y = r + q * 0.5
-        const wave = Math.sin(phase * 4 - (4 - y) * 0.6 - Math.PI / 2)
-        return wave > 0.3 ? (wave - 0.3) / 0.7 : 0
+      case 'swipe-vertical': {
+        const waveWidth = 2.5
+        const yPos = r + q * 0.5
+        const position = 5.5 - phase * 11
+        const diff = Math.abs(yPos - position)
+        return diff < waveWidth ? (waveWidth - diff) / waveWidth : 0
       }
 
       case 'rotate': {
@@ -133,17 +124,58 @@ export class FxEngine {
 
         const angle = Math.atan2(r, q)
         const normalizedAngle = (angle + Math.PI) / (2 * Math.PI)
-        const sweep = (phase * 0.8) % 1.0
 
-        const diff = (sweep - normalizedAngle + 1.0) % 1.0
+        const diff = (phase - normalizedAngle + 1.0) % 1.0
 
-        const tailLength = 0.5
+        const tailLength = 0.4
         return diff < tailLength ? 1.0 - diff / tailLength : 0
+      }
+
+      case 'sparkle': {
+        const angle = phase * Math.PI * 2
+
+        const seed = Math.sin(q * 12.9898 + r * 78.233) * 43758.5453
+        const offset = (seed - Math.floor(seed)) * Math.PI * 2
+
+        const wave = Math.sin(angle + offset)
+
+        const threshold = 0.6
+
+        if (wave > threshold) {
+          const intensity = (wave - threshold) / (1.0 - threshold)
+          return Math.pow(intensity, 2)
+        }
+
+        return 0
+      }
+
+      case 'wave': {
+        const noiseX = Math.sin(q * 0.8 + phase * Math.PI * 2)
+        const noiseY = Math.cos(r * 0.8 + phase * Math.PI * 2)
+        const combined = (noiseX + noiseY) / 2
+
+        const val = (combined + 1) / 2
+        return Math.pow(val, 2)
       }
 
       case 'none':
       default:
         return 0
+    }
+  }
+
+  private getEffectivePhase(basePhase: number, direction: string): number {
+    switch (direction) {
+      case 'backwards':
+        return 1.0 - basePhase
+
+      case 'bounce': {
+        return basePhase < 0.5 ? basePhase * 2 : (1.0 - basePhase) * 2
+      }
+
+      case 'forwards':
+      default:
+        return basePhase
     }
   }
 

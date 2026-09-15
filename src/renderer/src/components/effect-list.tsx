@@ -1,23 +1,21 @@
 import { EffectButton, EffectItem } from './effect-button'
 import NoEffect from './icons/no-effect'
-import Expand from './icons/expand'
+import Pulse from './icons/pulse'
 import Rotate from './icons/rotate'
-import Shrink from './icons/shrink'
-import SwipeRight from './icons/swipe-right'
-import SwipeLeft from './icons/swipe-left'
-import SwipeUp from './icons/swipe-up'
-import SwipeDown from './icons/swipe-down'
+import Sparkle from './icons/sparkle'
+import SwipeHorizontal from './icons/swipe-horizontal'
+import SwipeVertical from './icons/swipe-vertical'
+import Wave from './icons/wave'
 import { useLightingStore } from '@renderer/stores/useLightingStore'
 
 const EFFECTS_CONFIG: EffectItem[] = [
   { id: 'none', icon: NoEffect },
-  { id: 'expand', icon: Expand },
-  { id: 'shrink', icon: Shrink },
+  { id: 'pulse', icon: Pulse },
   { id: 'rotate', icon: Rotate },
-  { id: 'swipe-right', icon: SwipeRight },
-  { id: 'swipe-left', icon: SwipeLeft },
-  { id: 'swipe-up', icon: SwipeUp },
-  { id: 'swipe-down', icon: SwipeDown }
+  { id: 'swipe-horizontal', icon: SwipeHorizontal },
+  { id: 'swipe-vertical', icon: SwipeVertical },
+  { id: 'sparkle', icon: Sparkle },
+  { id: 'wave', icon: Wave }
 ]
 
 function EffectList(): React.JSX.Element {

@@ -5,6 +5,7 @@ export function useEngineSync(): void {
   const {
     activeEffectId,
     effectColor,
+    effectDirection,
     effectSpeed,
     backgroundColor,
     backgroundBrightness,
@@ -19,6 +20,7 @@ export function useEngineSync(): void {
       window.api.updateEngineConfig({
         activeEffectId,
         effectColor,
+        effectDirection,
         effectSpeed,
         backgroundColor,
         backgroundBrightness,
@@ -30,6 +32,7 @@ export function useEngineSync(): void {
   }, [
     activeEffectId,
     effectColor,
+    effectDirection,
     effectSpeed,
     backgroundColor,
     backgroundBrightness,

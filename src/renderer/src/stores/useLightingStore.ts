@@ -4,6 +4,7 @@ import type { LampState, RGBColor } from '@type/lighting'
 interface LightingStore {
   activeEffectId: string
   effectColor: RGBColor
+  effectDirection: string
   effectSpeed: number
 
   backgroundColor: RGBColor
@@ -17,6 +18,7 @@ interface LightingStore {
 
   setActiveEffectId: (id: string) => void
   setEffectColor: (color: RGBColor) => void
+  setEffectDirection: (direction: string) => void
   setEffectSpeed: (speed: number) => void
 
   setBackgroundColor: (color: RGBColor) => void
@@ -32,6 +34,7 @@ interface LightingStore {
 export const useLightingStore = create<LightingStore>((set) => ({
   activeEffectId: 'none',
   effectColor: { r: 255, g: 255, b: 255 },
+  effectDirection: 'forwards',
   effectSpeed: 1,
 
   backgroundColor: { r: 0, g: 0, b: 255 },
@@ -45,6 +48,7 @@ export const useLightingStore = create<LightingStore>((set) => ({
 
   setActiveEffectId: (activeEffectId) => set({ activeEffectId }),
   setEffectColor: (effectColor) => set({ effectColor }),
+  setEffectDirection: (effectDirection) => set({ effectDirection }),
   setEffectSpeed: (effectSpeed) => set({ effectSpeed }),
 
   setBackgroundColor: (backgroundColor) => set({ backgroundColor }),

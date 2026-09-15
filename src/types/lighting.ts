@@ -9,6 +9,7 @@ export interface LampState {
 export interface EngineConfig {
   activeEffectId: string
   effectColor: { r: number; g: number; b: number }
+  effectDirection: string
   effectSpeed: number
   backgroundColor: { r: number; g: number; b: number }
   backgroundBrightness: number

@@ -1,10 +1,10 @@
-interface HexaButtonProps {
+interface ColorButtonProps {
   color: string
   active: boolean
   onPress: () => void
 }
 
-function HexaButton({ color, active, onPress: onClick }: HexaButtonProps): React.JSX.Element {
+function ColorButton({ color, active, onPress: onClick }: ColorButtonProps): React.JSX.Element {
   return (
     <button
       className="px-1.5 py-2.5 transition-transform duration-200 active:scale-90"
@@ -30,4 +30,4 @@ function HexaButton({ color, active, onPress: onClick }: HexaButtonProps): React
   )
 }
 
-export default HexaButton
+export default ColorButton

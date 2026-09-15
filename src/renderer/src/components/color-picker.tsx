@@ -1,5 +1,5 @@
 import { COLOR_PRESETS } from '@renderer/constants/colors'
-import HexaButton from './hexa-button'
+import ColorButton from './color-button'
 import type { RGBColor } from '@type/lighting'
 
 interface ColorPickerProps {
@@ -18,7 +18,11 @@ function ColorPicker({ activeColor, onChange }: ColorPickerProps): React.JSX.Ele
 
         return (
           <li key={preset.id} className="-mx-3! even:mt-9!">
-            <HexaButton color={preset.hex} active={isActive} onPress={() => onChange(preset.rgb)} />
+            <ColorButton
+              color={preset.hex}
+              active={isActive}
+              onPress={() => onChange(preset.rgb)}
+            />
           </li>
         )
       })}

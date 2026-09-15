@@ -2,6 +2,7 @@ import ColorPicker from './color-picker'
 import Slider from './slider'
 import EffectList from './effect-list'
 import { useLightingStore } from '@renderer/stores/useLightingStore'
+import EffectDirection from './effect-direction'
 
 const minSpeed = 0.05
 const maxSpeed = 5
@@ -13,7 +14,7 @@ function EffectSection(): React.JSX.Element {
   const setColor = useLightingStore((state) => state.setEffectColor)
 
   return (
-    <div className="shrink-0 w-132 p-4 flex flex-col gap-20">
+    <div className="shrink-0 w-132 p-4 flex flex-col gap-12">
       <div className="flex flex-col gap-4">
         <h2>COLOR</h2>
         <ColorPicker activeColor={color} onChange={setColor} />
@@ -21,6 +22,10 @@ function EffectSection(): React.JSX.Element {
       <div className="flex flex-col gap-4">
         <h2>EFFECT</h2>
         <EffectList />
+      </div>
+      <div className="flex flex-col gap-4">
+        <h2>DIRECTION</h2>
+        <EffectDirection />
       </div>
       <div className="flex flex-col gap-4">
         <h2>SPEED</h2>
