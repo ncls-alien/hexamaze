@@ -24,7 +24,8 @@ function LampComponent({
   onTouchEnd
 }: LampProps): React.JSX.Element {
   const alpha = dimmer / 100
-  const color = `rgba(${r}, ${g}, ${b}, ${alpha})`
+  const displayAlpha = dimmer > 0 ? Math.pow(alpha, 0.45) : 0
+  const color = `rgba(${r}, ${g}, ${b}, ${displayAlpha})`
 
   return (
     <g
