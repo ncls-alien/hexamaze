@@ -38,27 +38,26 @@ export class ArtNetSender {
     this.socket.send(packet, 0, packet.length, this.port, this.host)
   }
 
+  // Art-Net Protocol Specification
+  // ArtDmx packet
+  // Source: https://art-net.org.uk/downloads/art-net.pdf Page 63 and following
   private createArtDmxPacket(dmxData: Buffer): Buffer {
-    const header = Buffer.from([
-      0x41,
-      0x72,
-      0x74,
-      0x2d,
-      0x4e,
-      0x65,
-      0x74,
-      0x00,
-      0x00,
-      0x50,
-      0x00,
-      0x0e,
-      0x00,
-      0x00,
-      this.universe & 0xff,
-      (this.universe >> 8) & 0xff,
-      (dmxData.length >> 8) & 0xff,
-      dmxData.length & 0xff
-    ])
+    const header = Buffer.alloc(18)
+
+    header.write('Art-Net\0', 0, 'ascii')
+    // OpCode
+    // 0x5000: OpDmx
+    // Source: https://art-net.org.uk/downloads/art-net.pdf Page 20
+    header.writeUInt16LE(0x5000, 8)
+    // Protocol Version 14 (Art-Net IV)
+    header.writeUInt16BE(14, 10)
+    // Sequence
+    // 0x00: disabled
+    header[12] = 0x00
+    // Physical Port
+    header[13] = 0x00
+    header.writeUInt16LE(this.universe, 14)
+    header.writeUInt16BE(dmxData.length, 16)
 
     return Buffer.concat([header, dmxData])
   }
