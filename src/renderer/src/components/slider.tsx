@@ -91,8 +91,8 @@ function Slider({ value, onChange, label, min = 0, max = 100 }: SliderProps): Re
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
-      <SliderThumb percentage={Math.round(percentage)} label={label} />
       <SliderTrack />
+      <SliderThumb percentage={Math.round(percentage)} label={label} />
     </div>
   )
 }
